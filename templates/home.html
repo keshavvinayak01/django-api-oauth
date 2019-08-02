@@ -3,6 +3,7 @@
 {% block content %}
 	{% if user.is_authenticated %}
              <p class="display-4">Hello, {{ user.username }}</p>
+			 <button><a href="{% url 'logout' %}"> Logout </a></button>
 	{% else %}
              <a class="lead" href="{% url 'login' %}">Log in</a>
 	{% endif %}
