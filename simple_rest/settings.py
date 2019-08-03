@@ -13,12 +13,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 
 from global_config import get_global_config
 active_config = get_global_config()
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -42,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'languages',
-    'social_django'
+    'social_django',
+    'algorithms',
+    'social_app'
 ]
 
 MIDDLEWARE = [
