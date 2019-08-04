@@ -5,16 +5,17 @@ from django.dispatch import receiver
 from django.utils import timezone
 from datetime import datetime
 # Create your models here.
+def get_user_image(instance,filename):
+    return 'files/{0}/avatar/{1}'.format(instance.user.username, filename)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to=get_user_directory, default = get_default_image)
+    avatar = models.ImageField(upload_to=get_user_image, default = 'files/default_avatar.jpg')
     institute = models.CharField(max_length=60)
     age = models.IntegerField(default=-1)
     bio = models.TextField(max_length=150)
 
-def get_user_image(instance,filename):
-    return 'files/{0}/avatar/{1}'.format(instance.user.username, filename)
 
 @receiver(post_save, sender=User, dispatch_uid = 'save_new_user_profile')
 def create_user_profile(sender, instance, created, **kwargs):
@@ -52,10 +53,10 @@ class Post(models.Model):
         return self.title
 
 class Comment(models.Model):
-    post = models.ForeignKey("social_app.Post", on_delete=models.CASCADE, related_names = 'comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_names = 'user_comments')
+    post = models.ForeignKey("social_app.Post", on_delete=models.CASCADE, related_name = 'comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'user_comments')
     text = models.CharField(max_length = 750)
-    created_at = models.DateTimeField(default = timezone.now())
+    created_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.author.username + '-' + str(datetime.now().date()) + '-' + self.post.id
