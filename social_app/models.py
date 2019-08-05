@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_init
 from django.dispatch import receiver
 from django.utils import timezone
+from algorithms.models import JobInfo
 from datetime import datetime
 # Create your models here.
 def get_user_image(instance,filename):
@@ -52,6 +53,17 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+@receiver(pre_init, sender=Post)
+def pre_init_job_schedule_receiver(sender, instance, created, **kwargs):
+    post = instance
+    JobInfo.objects.create(
+        post = post,
+        status = 'Started',
+        created_at = timezone.now(),
+        modified_at = timezone.now()
+    )
+
+
 class Comment(models.Model):
     post = models.ForeignKey("social_app.Post", on_delete=models.CASCADE, related_name = 'comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'user_comments')
@@ -59,4 +71,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.author.username + '-' + str(datetime.now().date()) + '-' + self.post.id
+        return self.author.username + '-' + str(datetime.now().date()) + '-post-' + self.post.id
