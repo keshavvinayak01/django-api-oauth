@@ -35,7 +35,7 @@ class PostDetailView(APIView):
             post = Post.objects.get(id = post_id).delete()
         except Exception as e : 
             return Response({'response' : 'error', 'message' : str(e)})             
-        return Response({'response' : 'success', 'Post with id {} deleted'.format(post_id)})
+        return Response({'response' : 'success', 'message' :  'Post with id {} deleted'.format(post_id)})
 
 # Call the algorithm here
 class PostCreateView(APIView):
@@ -47,7 +47,7 @@ class PostCreateView(APIView):
         if serializer.is_valid():
             saved_post = serializer.save()
         else:
-            return Response("response" : "error", "message" : serializer.errors})
+            return Response({"response" : "error", "message" : serializer.errors})
         return Response({"response" : "success", "message" : "post created succesfully at ".format(str(saved_comment.created_at))})
 
 class UserPostView(APIView):
@@ -75,21 +75,21 @@ class CommentsView(APIView):
         if serializer.is_valid():
             saved_comment = serializer.save()
         else:
-            return Response("response" : "error", "message" : serializer.errors})
+            return Response({"response" : "error", "message" : serializer.errors})
         return Response({"response" : "success", "message" : "comment created succesfully at ".format(str(saved_comment.created_at))})
 
 class SingleCommentView(APIView):
-
+    permission_classes = [isOwnerOrReadOnly]
     def put(self, request, post_id, comment_id):
         try : 
             comment = Comment.objects.get(post__id = post_id, id = comment_id)
             data = request.data.get('comment')
-            serializer = CommentSerializer(instance=comment, data=data, partial=True
-            if serializer.is_valid(raise_exception=True):
-                article_saved = serializer.save()                
+            serializer = CommentSerializer(instance=comment, data=data, partial=True)
+            if serializer.is_valid():
+                comment = serializer.save()                
         except Exception as e : 
             return Response({'response' : 'error', 'message' : str(e)})
-        return Response({"success": "Article '{}' updated successfully".format(article_saved.title)})
+        return Response({'response' : "success", 'message' : "Comment-{} updated successfully".format(comment_saved.id)})
 
     def delete(self, request, post_id, comment_id):
         try : 
