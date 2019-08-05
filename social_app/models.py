@@ -39,6 +39,7 @@ class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'posts')
     title = models.CharField(max_length=70)
     description = models.TextField(max_length = 500)
+    published = models.BooleanField(default = False)
     input_file = models.FileField(upload_to = get_user_post_dir)
     output_file = models.FileField(upload_to = get_user_post_dir, null=True)
     created_at = models.DateTimeField()
@@ -48,6 +49,7 @@ class Post(models.Model):
 
     def publish(self):
         self.published_date = timezone.now()
+        self.published = True
         self.save()
     
     def __str__(self):
@@ -69,6 +71,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'user_comments')
     text = models.CharField(max_length = 750)
     created_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.author.username + '-' + str(datetime.now().date()) + '-post-' + self.post.id

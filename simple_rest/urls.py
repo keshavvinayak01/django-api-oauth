@@ -14,5 +14,6 @@ urlpatterns = [
     path('api/token/refresh', TokenRefreshView.as_view()),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page=settings.LOGIN_REDIRECT_URL), name='logout'),
-    path('auth/', include('social_django.urls', namespace='social'))
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('social/', include('social_app.urls'))
 ]
