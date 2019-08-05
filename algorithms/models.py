@@ -5,7 +5,8 @@ class JobInfo(models.Model):
     post = models.OneToOneField("social_app.Post", on_delete=models.CASCADE)
     status = models.CharField(
         choices = [('Finished', 'Finshed'), ('Failed', 'Failed'), 
-                    ('Processing', 'Processing'),('Started','Started')]
+                    ('Processing', 'Processing'),('Started','Started')],
+        max_length = 20
     )
     created_at = models.DateField()
     modified_at = models.DateField()
