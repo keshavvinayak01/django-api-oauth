@@ -16,7 +16,7 @@ class Profile(models.Model):
     institute = models.CharField(max_length=60)
     age = models.IntegerField(default=-1)
     bio = models.TextField(max_length=150)
-
+    updated_at = models.DateTimeField(blank = True, null = True)
 
 @receiver(post_save, sender=User, dispatch_uid = 'save_new_user_profile')
 def create_user_profile(sender, instance, created, **kwargs):
