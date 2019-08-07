@@ -11,7 +11,7 @@ def get_user_image(instance,filename):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to=get_user_image, default = 'files/default_avatar.jpg')
     institute = models.CharField(max_length=60)
     age = models.IntegerField(default=-1)

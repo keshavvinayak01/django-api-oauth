@@ -1,17 +1,22 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from .models import Profile, Post, Comment
-from rest_framework.views import APIView
+from rest_framework.views import APIView, CreateAPIView
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, ProfileSerializer, PostSerializer, CommentSerializer
+from .serializers import UserSerializer, GetFullUserSerializer, ProfileSerializer, PostSerializer, CommentSerializer
 from .permissions import isOwnerOrReadOnly, isSuperUserOrReadOnly
 
-class FullUserView(generics.ListAPIView):
+class GetAllUserAndProfiles(generics.ListAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = GetFullUserSerializer
     permission_classes = [isSuperUserOrReadOnly]
 
+class CreateUserView(CreateAPIView):
+    model = User
+    serializer_class = UserSerializer
+    permssion_classes = [permissions.AllowAny]
+    
 # replace by customized homepage 
 class FullPostsView(generics.ListAPIView):
     queryset = Post.objects.filter(published = True)
@@ -97,3 +102,24 @@ class SingleCommentView(APIView):
         except Exception as e : 
             return Response({'response' : 'error', 'message' : str(e)})
         return Response({'response' : 'success', 'message' : 'Removed comment on Post-{} with id : {}'.format(post_id, comment_id)})
+
+def ProfileView(APIView):
+    permission_classes = [isOwnerOrReadOnly]
+
+    def get(self, request, username):
+        profile = Profile.objects.get(user__username = username)
+        if not profile : 
+            return Response({'response' : 'error', 'message' : 'no such user'})
+        serializer = ProfileSerializer(comments, many=True)
+        return Response({'profile' : serializer.data})
+
+    def put(self, request, username):
+        try : 
+            profile = Profile.objects.get(user__username = username)
+            data = request.data.get('profile')
+            serializer = ProfileSerializer(instance=comment, data=data, partial=True)
+            if serializer.is_valid():
+                profile = serializer.save()                
+        except Exception as e : 
+            return Response({'response' : 'error', 'message' : str(e)})
+        return Response({'response' : "success", 'message' : "Profile : {} updated successfully".format(username)})
