@@ -13,7 +13,7 @@ class GetAllUserAndProfiles(generics.ListAPIView):
     permission_classes = [isSuperUserOrReadOnly]
 
 class CreateUserView(APIView):
-    permssion_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
 
     def post(self,request):
         user = request.data.get('user')
@@ -29,6 +29,7 @@ class CreateUserView(APIView):
     
 # replace by customized homepage 
 class FullPostsView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Post.objects.filter(published = True)
     serializer_class = PostSerializer
 
@@ -54,6 +55,7 @@ class PostDetailView(APIView):
 
 # Call the algorithm here
 class PostCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def post(self,request):
         post = request.data.get('post')
         if not post:
@@ -66,6 +68,7 @@ class PostCreateView(APIView):
         return Response({"response" : "success", "message" : "post created succesfully at ".format(str(saved_comment.created_at))})
 
 class UserPostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, username):
         if request.user.username == username :
             posts = Post.objects.filter(creater__username = username)
@@ -77,6 +80,7 @@ class UserPostView(APIView):
         return Response({'posts' : serializer.data})
 
 class CommentsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, post_id):
         comments = Comment.objects.filter(post__id = post_id)
         if not comments : 
