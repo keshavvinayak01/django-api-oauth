@@ -28,6 +28,16 @@ class ProfileSerializer(sz.ModelSerializer):
         model = Profile
         fields = ('id', 'user.username', 'avatar', 'institute', 'age', 'bio')
 
+    def update(self, instance, validated_data):
+        instance.avatar = validated_data.get('avatar', instance.avatar)
+        instance.age = validated_data.get('age', instance.age)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.institute = validated_data.get('institute', instance.institute)        
+        instance.updated_at = timezone.now()
+        instance.save()
+
+        return instance
+
 class PostSerializer(sz.ModelSerializer):
     class Meta:
         model = Post

@@ -12,10 +12,20 @@ class GetAllUserAndProfiles(generics.ListAPIView):
     serializer_class = GetFullUserSerializer
     permission_classes = [isSuperUserOrReadOnly]
 
-class CreateUserView(CreateAPIView):
-    model = User
-    serializer_class = UserSerializer
+class CreateUserView(APIView):
     permssion_classes = [permissions.AllowAny]
+
+    def post(self,request):
+        user = request.data.get('user')
+        if not user:
+            return Response({'response' : 'error', 'message' : 'No data found'})
+        serializer = UserSerializer(data = user)
+        if serializer.is_valid():
+            saved_user = serializer.save()
+        else:
+            return Response({"response" : "error", "message" : serializer.errors})
+        return Response({"response" : "success", "message" : "user created succesfully"})    
+
     
 # replace by customized homepage 
 class FullPostsView(generics.ListAPIView):
