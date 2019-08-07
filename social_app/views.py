@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from .models import Profile, Post, Comment
-from rest_framework.views import APIView, CreateAPIView
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .serializers import UserSerializer, GetFullUserSerializer, ProfileSerializer, PostSerializer, CommentSerializer
 from .permissions import isOwnerOrReadOnly, isSuperUserOrReadOnly
@@ -113,7 +113,7 @@ class SingleCommentView(APIView):
             return Response({'response' : 'error', 'message' : str(e)})
         return Response({'response' : 'success', 'message' : 'Removed comment on Post-{} with id : {}'.format(post_id, comment_id)})
 
-def ProfileView(APIView):
+class ProfileView(APIView):
     permission_classes = [isOwnerOrReadOnly]
 
     def get(self, request, username):

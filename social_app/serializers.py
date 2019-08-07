@@ -12,7 +12,7 @@ class UserSerializer(sz.ModelSerializer):
     password = sz.CharField(write_only=True)
     def create(self, validated_data):
         user = User.objects.create(
-            username = validated_data.['username'],
+            username = validated_data['username'],
             first_name = validated_data['first_name'],
             last_name = validated_data['last_name'] 
         )
