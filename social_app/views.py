@@ -58,7 +58,7 @@ class PostCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self,request):
         post = request.data.get('post')
-        if not post:
+        if not post or not post.get('input_file') :
             return Response({'response' : 'error', 'message' : 'No data found'})
         serializer = PostSerializer(data = post)
         if serializer.is_valid():

@@ -1,5 +1,6 @@
 from rest_framework import serializers as sz
 from .models import *
+from algorithms.models import JobInfo
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -38,22 +39,6 @@ class ProfileSerializer(sz.ModelSerializer):
 
         return instance
 
-class PostSerializer(sz.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ('id','creator','title','description','input_file','output_file','created_at','likes','updated_at','published_date')
-    
-    def create(self, validated_data):
-        return Post.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.updated_at = timezone.now()
-        instance.save()
-
-        return instance
-
 class CommentSerializer(sz.ModelSerializer):
     class Meta:
         model = Comment
@@ -67,4 +52,37 @@ class CommentSerializer(sz.ModelSerializer):
         instance.updated_at = timezone.now()
         instance.save()
         
+        return instance
+
+
+class PostSerializer(sz.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id','creator','title','description','input_file','output_file','created_at','likes','updated_at','published_date')
+    
+    def create(self, validated_data):
+        post = Post.objects.create(
+            creator = self.request.user,
+            title = validated_data.get('title', 'No title provided'),
+            description = validated_data.get('description', 'No description provided'),
+            input_file = validated_data.get('input_file'),
+            created_at = timezone.now(),
+            updated_at = timezone.now()
+        )
+        post.save()
+        get_file_name(post.document.url,post)
+        JobInfo.objects.create(
+            post = post,
+            status = 'Started',
+            created_at = timezone.now(),
+            modified_at = timezone.now()
+        )
+
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.updated_at = timezone.now()
+        instance.save()
+
         return instance

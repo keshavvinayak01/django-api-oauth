@@ -20,3 +20,18 @@ class Programmer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Actor(models.Model):
+    name = models.CharField(max_length = 100)
+
+    def __str(self):
+        return self.name
+
+
+class Movies(models.Model):
+    movie_name = models.CharField(max_length = 150)
+    actors = models.ManyToManyField(Actor)
+
+    def __str__(self):
+        return self.movie_name
