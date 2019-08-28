@@ -29,8 +29,6 @@ SECRET_KEY = '=9f+j$o6&rci+8&$!3hc$_pp@@l+=mwa9#++=iqv68x(3u16c3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -59,17 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000'
-# ]
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
-
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_NAME = "csrftoken"
-CORS_ALLOW_HEADERS = ['*']
 
 ROOT_URLCONF = 'simple_rest.urls'
 
@@ -159,6 +147,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
+
+CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ['*']
 
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER' : 'simple_rest.utils.my_jwt_response_handler'

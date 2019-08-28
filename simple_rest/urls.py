@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path,include
-# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_jwt.views import obtain_jwt_token
 from django.contrib.auth import views as auth_views
 from .views import home

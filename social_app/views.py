@@ -19,7 +19,7 @@ def get_current_user(request):
     return Response(serializer.data)
 
 class CreateUserView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = (permissions.AllowAny, )
 
     def post(self,request):
         user = request.data.get('user')
