@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,12 +58,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',  
 ]
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000'
+# ]
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
+
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_NAME = "csrftoken"
+CORS_ALLOW_HEADERS = ['*']
 
 ROOT_URLCONF = 'simple_rest.urls'
 
@@ -143,9 +150,18 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES' : ('rest_framework.permissions.IsAuthenticated',),
-    # 'rest_framework.permissions.IsAuthenticated'
-    'DEFAULT_AUTHENTICATION_CLASSES' : ('rest_framework_simplejwt.authentication.JWTAuthentication',)    
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER' : 'simple_rest.utils.my_jwt_response_handler'
 }
 
 AUTHENTICATION_BACKENDS = (

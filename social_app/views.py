@@ -3,14 +3,20 @@ from rest_framework import viewsets, generics, permissions
 from rest_framework.response import Response
 from .models import Profile, Post, Comment
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, GetFullUserSerializer, ProfileSerializer, PostSerializer, CommentSerializer
+from .serializers import UserSerializerWithToken, GetFullUserSerializer, ProfileSerializer, PostSerializer, CommentSerializer
 from .permissions import isOwnerOrReadOnly, isSuperUserOrReadOnly
 
 class GetAllUserAndProfiles(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = GetFullUserSerializer
     permission_classes = [isSuperUserOrReadOnly]
+
+@api_view(['GET'])
+def get_current_user(request):
+    serializer = GetFullUserSerializer(request.user)
+    return Response(serializer.data)
 
 class CreateUserView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -19,7 +25,7 @@ class CreateUserView(APIView):
         user = request.data.get('user')
         if not user:
             return Response({'response' : 'error', 'message' : 'No data found'})
-        serializer = UserSerializer(data = user)
+        serializer = UserSerializerUserSerializerWithToken(data = user)
         if serializer.is_valid():
             saved_user = serializer.save()
         else:

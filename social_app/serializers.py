@@ -1,4 +1,5 @@
 from rest_framework import serializers as sz
+from rest_framework.settings import api_settings
 from .models import *
 from algorithms.models import JobInfo
 from django.utils import timezone
@@ -9,8 +10,19 @@ class GetFullUserSerializer(sz.ModelSerializer):
         model = User
         fields = ('id','username','is_superuser','first_name', 'last_name','profile')
 
-class UserSerializer(sz.ModelSerializer):
+
+class UserSerializerWithToken(sz.ModelSerializer):
     password = sz.CharField(write_only=True)
+    token = sz.SerializerMethodField()
+
+    def get_token(self, object):
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        payload = jwt_payload_handler(object)
+        token = jwt_encode_handler(payload)
+        return token
+
     def create(self, validated_data):
         user = User.objects.create(
             username = validated_data['username'],
@@ -22,7 +34,7 @@ class UserSerializer(sz.ModelSerializer):
         return user
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'first_name', 'last_name')
+        fields = ('token', 'username', 'password', 'first_name', 'last_name')
 
 class ProfileSerializer(sz.ModelSerializer):
     class Meta:
