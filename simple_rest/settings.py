@@ -155,7 +155,7 @@ CORS_ALLOW_CREDENTIALS = True
 ALLOWED_HOSTS = ['*']
 
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER' : 'simple_rest.utils.my_jwt_response_handler'
+    'JWT_RESPONSE_PAYLOAD_HANDLER' : 'simple_rest.utils.custom_jwt_response_handler'
 }
 
 AUTHENTICATION_BACKENDS = (

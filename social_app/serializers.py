@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class GetFullUserSerializer(sz.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username','is_superuser','first_name', 'last_name','profile')
+        fields = ('username','is_superuser','first_name', 'last_name')
 
 
 class UserSerializerWithToken(sz.ModelSerializer):
@@ -22,7 +22,7 @@ class UserSerializerWithToken(sz.ModelSerializer):
         payload = jwt_payload_handler(object)
         token = jwt_encode_handler(payload)
         return token
-
+        
     def create(self, validated_data):
         user = User.objects.create(
             username = validated_data['username'],
