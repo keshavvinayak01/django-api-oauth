@@ -8,7 +8,6 @@ from django.conf import settings
 urlpatterns = [
     path('', home, name='home'),
     path('admin/', admin.site.urls),
-    path('languages/', include('languages.urls')),
     path('api-url/', include('rest_framework.urls')),
     path('token-auth/', obtain_jwt_token),
     path('login/', auth_views.LoginView.as_view(), name='login'),
