@@ -41,10 +41,10 @@ class RegisterUser extends Component {
         }
         const property = 'display_' + name
         if(errors.length === 0){
-            this.setState({
-                [property] : false
-            })
-            // this.state[property] = false
+            // this.setState({
+            //     [property] : false
+            // })
+            this.state[property] = false
         }
         if(this.state[property]){
             return (<>{errors.map((error,index) => <Row key={index} style={{color : 'red'}}>{error}</Row>)}</>)        
@@ -78,6 +78,7 @@ class RegisterUser extends Component {
     sendRegistration = e => {
         e.preventDefault()
         const {first_name, last_name, username, password} = this.state
+        console.log(this.state)
         if(this.isValid()){
             Axios.post(base_url + 'social/users/create', {
                 'user' : {

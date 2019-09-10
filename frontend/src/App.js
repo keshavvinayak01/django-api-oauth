@@ -50,7 +50,7 @@ class App extends Component {
 	handleLogin = (e, data) => {
 		// console.log(data['username'], data['password'])
 		e.preventDefault();
-		console.log(data)
+		console.log()
 		fetch(base_url + 'token-auth/', {
 			crossDomain : true,
 			withCredentials : true,
@@ -65,6 +65,7 @@ class App extends Component {
 		})
 		.then(response => response.json())
 		.then(json => {
+			console.log(json)
 			localStorage.setItem('token', json.token);
 			this.setState({
 				logged_in : true,
@@ -100,7 +101,5 @@ class App extends Component {
 		)
 	}
 }
-
-
 
 export default App;
